@@ -22,10 +22,28 @@ const Login = props => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const loginBtnPressed = () => {
-    setIsLoading(true);
-    if (email && password) {
-      axios
+  const validate_field = () => {
+    if(!email || !password) {
+      alert('Email and Password fields should not be empty')
+      return false
+    }else if (password.length < 6){
+      alert('Password should be at least 6 characters long')
+      return false
+    } else{
+      const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if(reg.test(email) === true){
+        return true
+      }else{
+        alert('Email is not valid')
+        return false;
+      }
+    }
+  }
+
+  const loginBtnPressed = async () => {
+    if (validate_field()) {
+      setIsLoading(true);
+      await axios
         .post(base_url + '/login', {
           email: email,
           password: password,
@@ -33,16 +51,16 @@ const Login = props => {
         .then(res => {
           if (res.data.code === 200) {
             props.navigation.push('LoginDashboard', {msg: res.data.message});
-          }else if(res.data.code === 202){
-            alert(res.data.message)
-          }else{
-            alert('Invalid credentials');
+          } else if (res.data.code === 202) {
+            alert(res.data.message);
+          } else {
+            alert('Some error');
           }
         })
         .catch(error => console.log('Error: ', error))
-        .finally(() => setIsLoading(false));
-    } else {
-      alert('Email and Password should not be empty');
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 

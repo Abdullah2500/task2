@@ -45,8 +45,9 @@ const CommunitiesMain = props => {
                   color: '#85754E',
                   fontFamily: 'NunitoSans-Regular',
                   fontSize: 15,
+                  paddingBottom: 5,
                   borderBottomColor: '#85754E',
-                  borderBottomWidth: 3,
+                  borderBottomWidth: 2,
                 }
               : {
                   color: 'black',

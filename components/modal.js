@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
 import {View, Modal, ActivityIndicator} from 'react-native';
-
 const ModalComponent = props => {
   useEffect(() => {
-    setTimeout(() => props.toggleLoading(false), 10000);
+    setTimeout(() => props.toggleLoading(false), 2000);
   }, []);
   return (
     <Modal>

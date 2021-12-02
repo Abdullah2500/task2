@@ -5,7 +5,6 @@ import Header from '../components/header';
 
 const LoginDashboard = props => {
   const {msg} = props.route.params;
-  console.log('Message Login Dashboard: ', msg);
   return (
     <View>
       <Header navigation={props.navigation} />
