@@ -1,16 +1,61 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
-
-import All from './tabscommunities/all/all';
-import Current from './tabscommunities/current';
-import Future from './tabscommunities/future';
-import Completed from './tabscommunities/completed';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {base_url} from '../../../enums';
 import Header from '../../../components/header';
+import ListCommunities from './listcommunities';
 
 const CommunitiesMain = props => {
+  const [commmunityList, setCommunityList] = useState([]);
   const [index, setIndex] = useState(1);
-  console.log('Index: ', index);
-  // console.log('Navigation in CommunitiesMain', props.navigation);
+
+  var currentList = commmunityList.filter(item => {
+    return item.category == 'Current';
+  });
+  console.log('CurrentList: ', currentList);
+  var futureList = commmunityList.filter(item => {
+    {
+      return item.category == 'Future';
+    }
+  });
+  var completedList = commmunityList.filter(item => {
+    return item.category == 'Completed';
+  });
+
+  const getToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      console.log('getToken, communitiesMain: ', value);
+      if (value !== null) {
+        return value;
+      } else {
+        console.log('Inner value of async token is null');
+      }
+    } catch (e) {
+      console.log('Error: ', e);
+    }
+  };
+
+  const getCommunityList = async () => {
+    try {
+      let tokenState = await getToken();
+      let config = {
+        headers: {
+          Authorization: 'Bearer ' + tokenState,
+        },
+      };
+      await axios
+        .get(base_url + '/community-list', config)
+        .then(res => {
+          setCommunityList(res.data.data);
+        })
+        .catch(error => console.log('Error: ', error));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const tabs = [
     {
       id: '1',
@@ -60,6 +105,11 @@ const CommunitiesMain = props => {
       </TouchableOpacity>
     );
   };
+
+  useEffect(() => {
+    getCommunityList();
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: '#E5E5E5'}}>
       <Header title="Hi, Charles!" navigation={props.navigation} />
@@ -93,13 +143,13 @@ const CommunitiesMain = props => {
         />
       </View>
       {index == 1 ? (
-        <All navigation={props.navigation} />
+        <ListCommunities commmunityList={commmunityList} />
       ) : index == 2 ? (
-        <Current />
+        <ListCommunities commmunityList={currentList} />
       ) : index == 3 ? (
-        <Future />
+        <ListCommunities commmunityList={futureList} />
       ) : index == 4 ? (
-        <Completed />
+        <ListCommunities commmunityList={completedList} />
       ) : null}
     </View>
   );

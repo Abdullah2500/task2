@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import WelcomePage from '../screens/welcomepage';
 import Login from '../screens/login';
 import HomePage from '../screens/homepage';
-import LoginDashboard from '../screens/logindashboard';
 
 const Stack = createStackNavigator();
 
@@ -27,11 +26,6 @@ const NavScreens = () => {
           name="HomePage"
           options={{headerShown: false}}
           component={HomePage} // Bottom Navigation here
-        />
-        <Stack.Screen
-          name="LoginDashboard"
-          options={{headerShown: false}}
-          component={LoginDashboard} 
         />
       </Stack.Navigator>
     </NavigationContainer>

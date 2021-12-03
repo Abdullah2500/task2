@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {calHeight, calWidth} from '../caldimens';
 import Header from '../components/header';
 import ModalComponent from '../components/modal';
@@ -23,22 +24,43 @@ const Login = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validate_field = () => {
-    if(!email || !password) {
-      alert('Email and Password fields should not be empty')
-      return false
-    }else if (password.length < 6){
-      alert('Password should be at least 6 characters long')
-      return false
-    } else{
+    if (!email || !password) {
+      alert('Email and Password fields should not be empty');
+      return false;
+    } else if (password.length < 6) {
+      alert('Password should be at least 6 characters long');
+      return false;
+    } else {
       const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      if(reg.test(email) === true){
-        return true
-      }else{
-        alert('Email is not valid')
+      if (reg.test(email) === true) {
+        return true;
+      } else {
+        alert('Email is not valid');
         return false;
       }
     }
-  }
+  };
+
+  // AsyncStorage setToken
+  const storeToken = async value => {
+    try {
+      await AsyncStorage.setItem('token', value);
+    } catch (e) {
+      console.log('Error: ', e);
+    }
+  };
+
+  // AsyncStorage getToken
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        // console.log('Previosly stored value: ', value);
+      }
+    } catch (e) {
+      console.log('Error: ', e);
+    }
+  };
 
   const loginBtnPressed = async () => {
     if (validate_field()) {
@@ -50,7 +72,8 @@ const Login = props => {
         })
         .then(res => {
           if (res.data.code === 200) {
-            props.navigation.push('LoginDashboard', {msg: res.data.message});
+            storeToken(res.data.data.token);
+            props.navigation.push('HomePage');
           } else if (res.data.code === 202) {
             alert(res.data.message);
           } else {
@@ -64,16 +87,20 @@ const Login = props => {
     }
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#E5E5E5'}}>
+    <KeyboardAvoidingView style={{flex: 1}}>
+      <Header navigation={props.navigation} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <Header navigation={props.navigation} />
+        <View style={{flex: 1}}>
           <View
             style={{
               alignItems: 'center',
               paddingTop: calHeight(4),
-              width: calWidth(86),
+              paddingHorizontal: calWidth(7),
               alignSelf: 'center',
               height: calHeight(25),
             }}>
@@ -99,12 +126,12 @@ const Login = props => {
             style={{
               backgroundColor: '#FFFFFF',
               alignItems: 'center',
-              postion: 'absolute',
+              // postion: 'absolute',
               borderTopEndRadius: 30,
               borderTopStartRadius: 30,
               paddingTop: calHeight(6),
               paddingHorizontal: calWidth(7),
-              bottom: 0,
+              // bottom: 0,
               height: calHeight(80),
             }}>
             <Text

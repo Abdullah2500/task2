@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
-import { calHeight, calWidth } from '../../../../../caldimens';
+import {calHeight} from '../../../caldimens';
 
-const Post = props => {
-  const {img, title, label, page} = props.item;
-  console.log(page);
+const PostCommunity = props => {
+  const {name, address, coverImage} = props.item;
   return (
     <View
       style={{
@@ -14,9 +13,7 @@ const Post = props => {
         borderTopStartRadius: 10,
         borderTopEndRadius: 10,
       }}>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => props.navigation.push(page)}>
+      <TouchableOpacity activeOpacity={0.9}>
         <Image
           style={{
             width: '100%',
@@ -24,7 +21,7 @@ const Post = props => {
             borderTopRightRadius: 10,
             borderTopLeftRadius: 10,
           }}
-          source={img}
+          source={{uri: coverImage}}
         />
         <View
           style={{
@@ -37,7 +34,7 @@ const Post = props => {
               fontFamily: 'NunitoSans-Bold',
               color: '#373C46',
             }}>
-            {title}
+            {name}
           </Text>
           <Text
             style={{
@@ -46,7 +43,7 @@ const Post = props => {
               fontSize: 16,
               color: '#585C63CC',
             }}>
-            {label}
+            {address}
           </Text>
         </View>
       </TouchableOpacity>
@@ -54,4 +51,4 @@ const Post = props => {
   );
 };
 
-export default Post;
+export default PostCommunity;

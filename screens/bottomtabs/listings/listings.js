@@ -5,20 +5,6 @@ import Header from '../../../components/header';
 // const Stack = createStackNavigator();
 
 const Listings = props => {
-  // return (
-  //   <Stack.Navigator>
-  //     <Stack.Screen
-  //       name="ComA"
-  //       options={{headerShown: false}}
-  //       component={ComA}
-  //     />
-  //     <Stack.Screen
-  //       name="ComB"
-  //       options={{headerShown: false}}
-  //       component={ComB}
-  //     />
-  //   </Stack.Navigator>
-  // );
   return (
     <View style={{backgroundColor: '#E5E5E5'}}>
       <Header title="Listings" navigation={props.navigation} />
