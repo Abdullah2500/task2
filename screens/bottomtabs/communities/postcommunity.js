@@ -25,7 +25,10 @@ const PostCommunity = props => {
             long_description: long_description,
           })
         }>
-        <Image style={styles.img} source={{uri: coverImage}} />
+        <Image
+          style={styles.img}
+          source={require('../../../assets/img/community1.png')}
+        />
         <View style={styles.textBlock}>
           <Text style={styles.headText}>{name}</Text>
           <Text style={styles.labelText}>{address}</Text>
@@ -37,7 +40,8 @@ const PostCommunity = props => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    marginTop: calHeight(3),
+    marginTop: calHeight(2),
+    marginBottom: calHeight(3),
     width: calWidth(85),
     backgroundColor: colors.white,
     borderTopStartRadius: 10,
