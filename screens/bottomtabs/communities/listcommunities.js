@@ -3,12 +3,14 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import {calHeight, calWidth} from '../../../caldimens';
 import PostCommunity from './postcommunity';
 
-const ListCommunities = ({commmunityList}) => {
+const ListCommunities = props => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={commmunityList}
-        renderItem={({item}) => <PostCommunity item={item} />}
+        data={props.communityList}
+        renderItem={({item}) => (
+          <PostCommunity item={item} navigation={props.navigation} />
+        )}
         keyExtractor={item => item.id}
       />
     </View>

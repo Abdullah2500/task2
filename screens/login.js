@@ -9,13 +9,15 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Keyboard,
+  StyleSheet,
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {calHeight, calWidth} from '../caldimens';
 import Header from '../components/header';
 import ModalComponent from '../components/modal';
-import {base_url} from '../enums';
+import {base_url, colors, fonts} from '../enums';
+import Button from '../components/button';
 
 const Login = props => {
   const [passVisible, setPassVisibile] = useState(true);
@@ -92,121 +94,41 @@ const Login = props => {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView style={styles.mainContainer}>
       <Header navigation={props.navigation} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{flex: 1}}>
-          <View
-            style={{
-              alignItems: 'center',
-              paddingTop: calHeight(4),
-              paddingHorizontal: calWidth(7),
-              alignSelf: 'center',
-              height: calHeight(25),
-            }}>
-            <Text
-              style={{
-                fontFamily: 'NunitoSans-Bold',
-                fontSize: 24,
-                color: '#373C46',
-              }}>
-              Welcome Back!
-            </Text>
-            <Text
-              style={{
-                color: '#585C63',
-                fontSize: 16,
-                fontFamily: 'NunitoSans-Regular',
-                lineHeight: 35,
-              }}>
+          <View style={styles.upperSection}>
+            <Text style={styles.mainHead}>Welcome Back!</Text>
+            <Text style={styles.headLabel}>
               Login to your account by entering your email and password.
             </Text>
           </View>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              alignItems: 'center',
-              // postion: 'absolute',
-              borderTopEndRadius: 30,
-              borderTopStartRadius: 30,
-              paddingTop: calHeight(6),
-              paddingHorizontal: calWidth(7),
-              // bottom: 0,
-              height: calHeight(80),
-            }}>
-            <Text
-              style={{
-                color: '#85754E',
-                fontFamily: 'NunitoSans-Regular',
-                fontSize: 16,
-                alignSelf: 'flex-start',
-              }}>
-              E-Mail
-            </Text>
-            <View
-              style={{
-                width: '100%',
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: '#A3A3A3',
-                margin: calHeight(2),
-                flexDirection: 'row',
-              }}>
+          <View style={styles.bottomSection}>
+            <Text style={styles.inputLabel}>E-Mail</Text>
+            <View style={styles.inputContainer}>
               <Image
-                style={{
-                  marginHorizontal: calWidth(5),
-                  alignSelf: 'center',
-                }}
+                style={styles.inputIcon}
                 source={require('../assets/img/mail.png')}
               />
               <View>
                 <TextInput
                   onChangeText={text => setEmail(text)}
-                  style={{
-                    width: calWidth(64),
-                    fontFamily: 'NunitoSans-Regular',
-                    fontSize: 16,
-                    color: '#585C6399',
-                  }}
+                  style={styles.inputInnerContainer}
                   placeholder="Enter your e-mail here"
                 />
               </View>
             </View>
-            <Text
-              style={{
-                color: '#85754E',
-                fontFamily: 'NunitoSans-Regular',
-                fontSize: 16,
-                alignSelf: 'flex-start',
-              }}>
-              Password
-            </Text>
-            <View
-              style={{
-                width: '100%',
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: '#A3A3A3',
-                margin: calHeight(2),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <View style={styles.inputContainer}>
               <Image
-                style={{
-                  alignSelf: 'center',
-                  marginHorizontal: calWidth(5),
-                }}
+                style={styles.inputIcon}
                 source={require('../assets/img/password.png')}
               />
               <View>
                 <TextInput
                   onChangeText={text => setPassword(text)}
-                  style={{
-                    fontFamily: 'NunitoSans-Regular',
-                    fontSize: 16,
-                    width: calWidth(54),
-                    color: '#585C6399',
-                  }}
+                  style={(styles.inputInnerContainer, {width: calWidth(54)})}
                   secureTextEntry={passVisible}
                   placeholder="Enter your password here"
                 />
@@ -225,66 +147,22 @@ const Login = props => {
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => alert('Improve your memory!')}
-              style={{
-                alignSelf: 'flex-end',
-                marginTop: calHeight(2),
-              }}>
-              <Text
-                style={{
-                  color: '#373C46',
-                  fontFamily: 'NuniyoSans-Regular',
-                  fontSize: 16,
-                }}>
-                Forgot Password?
-              </Text>
+              style={styles.forgotPass}>
+              <Text style={styles.forgotPassText}>Forgot Password?</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            <Button
               activeOpacity={0.9}
-              onPress={loginBtnPressed}
-              style={{
-                backgroundColor: '#85754E',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                height: calHeight(8),
-                borderRadius: 12,
-                marginTop: calHeight(4),
-              }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 16,
-                  fontFamily: 'NunitoSans-Regular',
-                }}>
-                Login
-              </Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignSelf: 'flex-start',
-                marginTop: calHeight(3),
-              }}>
-              <Text
-                style={{
-                  color: '#373C46',
-                  fontFamily: 'NuniyoSans-Regular',
-                  fontSize: 16,
-                  paddingRight: '2%',
-                }}>
+              btnPressed={loginBtnPressed}
+              title="Login"
+            />
+            <View style={styles.endTextStyle}>
+              <Text style={styles.endTextFontStyle}>
                 Don't have an account?
               </Text>
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => alert('Redirecting to Sign up page')}>
-                <Text
-                  style={{
-                    color: '#85754E',
-                    fontFamily: 'NunitoSans-Regular',
-                    fontSize: 16,
-                  }}>
-                  Sign Up
-                </Text>
+                <Text style={styles.signUpBtn}>Sign Up</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -294,5 +172,91 @@ const Login = props => {
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  upperSection: {
+    alignItems: 'center',
+    paddingTop: calHeight(4),
+    paddingHorizontal: calWidth(7),
+    alignSelf: 'center',
+    height: calHeight(25),
+  },
+  mainHead: {
+    fontFamily: fonts.bold,
+    fontSize: 24,
+    color: colors.mainFontColor,
+  },
+  headLabel: {
+    color: colors.labelFontColor,
+    fontSize: 16,
+    fontFamily: fonts.regular,
+    lineHeight: 35,
+  },
+  bottomSection: {
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    postion: 'absolute',
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    paddingTop: calHeight(6),
+    paddingHorizontal: calWidth(7),
+    bottom: 0,
+    height: calHeight(80),
+  },
+  inputLabel: {
+    color: colors.primaryColor,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    alignSelf: 'flex-start',
+  },
+  inputContainer: {
+    width: '100%',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.borderColor,
+    margin: '5%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputInnerContainer: {
+    width: calWidth(64),
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    color: colors.placeholderColor,
+  },
+  inputIcon: {
+    marginHorizontal: calWidth(5),
+    alignSelf: 'center',
+  },
+  forgotPass: {
+    alignSelf: 'flex-end',
+    marginTop: calHeight(2),
+  },
+  forgotPassText: {
+    color: colors.mainFontColor,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+  },
+  endTextStyle: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginTop: calHeight(3),
+  },
+  endTextFontStyle: {
+    color: colors.mainFontColor,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    paddingRight: '2%',
+  },
+  signUpBtn: {
+    color: colors.primaryColor,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+  },
+});
 
 export default Login;

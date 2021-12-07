@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Image, Text, Pressable} from 'react-native';
 import {calHeight, calWidth} from '../caldimens';
+import {colors, fonts} from '../enums';
 
 const Header = props => {
   const {title} = props;
@@ -12,7 +13,6 @@ const Header = props => {
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        alignSelf: 'center',
         paddingHorizontal: calWidth(7),
       }}>
       {!title ? (
@@ -22,15 +22,15 @@ const Header = props => {
       ) : (
         <Text
           style={{
-            fontFamily: 'NunitoSans-Bold',
+            fontFamily: fonts.bold,
             fontSize: 26,
-            color: '#373C46',
+            color: colors.mainFontColor,
           }}>
           {title}
         </Text>
       )}
       <Image
-        style={{width: 45, height: 45}}
+        style={{width: 40, height: 40}}
         source={require('../assets/img/logo.png')}
       />
     </View>

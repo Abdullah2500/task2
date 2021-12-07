@@ -6,7 +6,7 @@ import News from '../screens/bottomtabs/news';
 import Notifications from '../screens/bottomtabs/notifications';
 import More from '../screens/bottomtabs/more';
 import {Image, View, Text, StyleSheet} from 'react-native';
-import { calHeight } from '../caldimens';
+import {calHeight} from '../caldimens';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,6 +14,7 @@ const NavBottom = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {

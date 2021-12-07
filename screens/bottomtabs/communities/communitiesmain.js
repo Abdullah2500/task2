@@ -1,32 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {base_url} from '../../../enums';
 import Header from '../../../components/header';
 import ListCommunities from './listcommunities';
+import {fonts, colors} from '../../../enums';
 
 const CommunitiesMain = props => {
-  const [commmunityList, setCommunityList] = useState([]);
+  const [communityList, setCommunityList] = useState([]);
   const [index, setIndex] = useState(1);
-
-  var currentList = commmunityList.filter(item => {
-    return item.category == 'Current';
-  });
-  console.log('CurrentList: ', currentList);
-  var futureList = commmunityList.filter(item => {
-    {
-      return item.category == 'Future';
-    }
-  });
-  var completedList = commmunityList.filter(item => {
-    return item.category == 'Completed';
-  });
 
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
-      console.log('getToken, communitiesMain: ', value);
       if (value !== null) {
         return value;
       } else {
@@ -58,19 +45,19 @@ const CommunitiesMain = props => {
 
   const tabs = [
     {
-      id: '1',
+      id: 1,
       name: '  All  ',
     },
     {
-      id: '2',
+      id: 2,
       name: ' Current ',
     },
     {
-      id: '3',
+      id: 3,
       name: ' Future ',
     },
     {
-      id: '4',
+      id: 4,
       name: 'Completed',
     },
   ];
@@ -84,56 +71,107 @@ const CommunitiesMain = props => {
         }}
         onPress={() => setIndex(item.id)}>
         <Text
-          style={
-            item.id == index
-              ? {
-                  color: '#85754E',
-                  fontFamily: 'NunitoSans-Regular',
-                  fontSize: 15,
-                  paddingBottom: 5,
-                  borderBottomColor: '#85754E',
-                  borderBottomWidth: 2,
-                }
-              : {
-                  color: 'black',
-                  fontFamily: 'NunitoSans-Regular',
-                  fontSize: 15,
-                }
-          }>
+          style={item.id == index ? styles.selectedTab : styles.unselectedTab}>
           {item.name}
         </Text>
       </TouchableOpacity>
     );
   };
 
+  const switchFunc = () => {
+    switch (index) {
+      case 1:
+        console.log('first tab');
+        return (
+          <ListCommunities
+            communityList={communityList}
+            navigation={props.navigation}
+          />
+        );
+      case 2:
+        console.log('second tab');
+        var currentList = communityList.filter(item => {
+          return item.category == 'Current';
+        });
+        return (
+          <ListCommunities
+            communityList={currentList}
+            navigation={props.navigation}
+          />
+        );
+      case 3:
+        console.log('third tab');
+        var futureList = communityList.filter(item => {
+          {
+            return item.category == 'Future';
+          }
+        });
+        return (
+          <ListCommunities
+            communityList={futureList}
+            navigation={props.navigation}
+          />
+        );
+      case 4:
+        console.log('fourth tab');
+        var completedList = communityList.filter(item => {
+          return item.category == 'Completed';
+        });
+        return (
+          <ListCommunities
+            communityList={completedList}
+            navigation={props.navigation}
+          />
+        );
+    }
+  };
+
+  // const switchFunc = () => {
+  //   let data;
+  //   switch (index) {
+  //     case 1: {
+  //       data = communityList;
+  //       console.log('All');
+  //       return data;
+  //     }
+  //     case 2: {
+  //       data = communityList.filter(item => {
+  //         return item.category == 'Current';
+  //       });
+  //       console.log('Current');
+  //       return data;
+  //     }
+  //     case 3: {
+  //       data = communityList.filter(item => {
+  //         return item.category == 'Future';
+  //       });
+  //       console.log('Future');
+  //       return data;
+  //     }
+  //     case 4: {
+  //       data = communityList.filter(item => {
+  //         return item.category == 'Completed';
+  //       });
+  //       console.log('Completed');
+  //       return data;
+  //     }
+  //   }
+  //   return (
+  //     <ListCommunities communityList={data} navigation={props.navigation} />
+  //   );
+  // };
+
   useEffect(() => {
     getCommunityList();
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#E5E5E5'}}>
+    <View style={styles.mainContainer}>
       <Header title="Hi, Charles!" navigation={props.navigation} />
-      <View
-        style={{
-          backgroundColor: '#E5E5E5',
-          width: '85%',
-          alignSelf: 'center',
-        }}>
-        <Text
-          style={{
-            color: '#585C63',
-            fontSize: 18,
-            fontFamily: 'NunitoSans-Regular',
-          }}>
-          Let's find you dream home.
-        </Text>
+      <View style={styles.upperSection}>
+        <Text style={styles.upperSectionLabel}>Let's find you dream home.</Text>
       </View>
-      <View
-        style={{
-          width: '90%',
-          alignSelf: 'center',
-          marginTop: '5%',
-        }}>
+      <View style={styles.tabContainer}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -142,17 +180,43 @@ const CommunitiesMain = props => {
           keyExtractor={item => item.id}
         />
       </View>
-      {index == 1 ? (
-        <ListCommunities commmunityList={commmunityList} />
-      ) : index == 2 ? (
-        <ListCommunities commmunityList={currentList} />
-      ) : index == 3 ? (
-        <ListCommunities commmunityList={futureList} />
-      ) : index == 4 ? (
-        <ListCommunities commmunityList={completedList} />
-      ) : null}
+      {switchFunc()}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  upperSection: {
+    width: '85%',
+    alignSelf: 'center',
+  },
+  upperSectionLabel: {
+    color: colors.labelFontColor,
+    fontSize: 18,
+    fontFamily: fonts.regular,
+  },
+  tabContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: '5%',
+  },
+  selectedTab: {
+    color: colors.primaryColor,
+    fontFamily: fonts.regular,
+    fontSize: 15,
+    paddingBottom: 5,
+    borderBottomColor: colors.primaryColor,
+    borderBottomWidth: 2,
+  },
+  unselectedTab: {
+    color: 'black',
+    fontFamily: fonts.regular,
+    fontSize: 15,
+  },
+});
 
 export default CommunitiesMain;
