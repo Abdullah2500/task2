@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -52,46 +52,29 @@ const Login = props => {
     }
   };
 
-  // AsyncStorage getToken
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
-        // console.log('Previosly stored value: ', value);
-      }
-    } catch (e) {
-      console.log('Error: ', e);
-    }
-  };
-
   const loginBtnPressed = async () => {
-    if (validate_field()) {
-      setIsLoading(true);
-      await axios
-        .post(base_url + '/login', {
+    try {
+      if (validate_field()) {
+        setIsLoading(true);
+        const res = await axios.post(base_url + '/login', {
           email: email,
           password: password,
-        })
-        .then(res => {
-          if (res.data.code === 200) {
-            storeToken(res.data.data.token);
-            props.navigation.push('HomePage');
-          } else if (res.data.code === 202) {
-            alert(res.data.message);
-          } else {
-            alert('Some error');
-          }
-        })
-        .catch(error => console.log('Error: ', error))
-        .finally(() => {
-          setIsLoading(false);
         });
+        if (res.data.code === 200) {
+          storeToken(res.data.data.token);
+          props.navigation.push('HomePage');
+        } else if (res.data.code === 202) {
+          alert(res.data.message);
+        } else {
+          alert('Some Network error');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.mainContainer}>

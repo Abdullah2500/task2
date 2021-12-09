@@ -1,43 +1,38 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {base_url} from '../../../enums';
 import Header from '../../../components/header';
-import ListCommunities from './listcommunities';
+import ModalComponent from '../../../components/modal';
+import ListCommunities from './listCommunities';
 import {fonts, colors} from '../../../enums';
 
 const CommunitiesMain = props => {
   const [communityList, setCommunityList] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
   const [index, setIndex] = useState(1);
 
-  const getToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
-        return value;
-      } else {
-        console.log('Inner value of async token is null');
-      }
-    } catch (e) {
-      console.log('Error: ', e);
-    }
-  };
-
   const getCommunityList = async () => {
+    console.log('getCommunityList called....');
     try {
-      let tokenState = await getToken();
+      let token = await AsyncStorage.getItem('token');
       let config = {
         headers: {
-          Authorization: 'Bearer ' + tokenState,
+          Authorization: 'Bearer ' + token,
         },
       };
-      await axios
-        .get(base_url + '/community-list', config)
-        .then(res => {
-          setCommunityList(res.data.data);
-        })
-        .catch(error => console.log('Error: ', error));
+      const res = await axios.get(base_url + '/community-list', config);
+      setCommunityList(res.data.data);
+      console.log('getCommunityList called again....');
+      setRefreshing(false);
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +56,7 @@ const CommunitiesMain = props => {
       name: 'Completed',
     },
   ];
-
+  // renderItem for tabs
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -78,88 +73,27 @@ const CommunitiesMain = props => {
     );
   };
 
-  const switchFunc = () => {
+  const filterFunction = () => {
     switch (index) {
       case 1:
-        console.log('first tab');
-        return (
-          <ListCommunities
-            communityList={communityList}
-            navigation={props.navigation}
-          />
-        );
+        return communityList;
       case 2:
-        console.log('second tab');
-        var currentList = communityList.filter(item => {
+        let currentList = communityList.filter(item => {
           return item.category == 'Current';
         });
-        return (
-          <ListCommunities
-            communityList={currentList}
-            navigation={props.navigation}
-          />
-        );
+        return currentList;
       case 3:
-        console.log('third tab');
-        var futureList = communityList.filter(item => {
-          {
-            return item.category == 'Future';
-          }
+        let futureList = communityList.filter(item => {
+          return item.category == 'Future';
         });
-        return (
-          <ListCommunities
-            communityList={futureList}
-            navigation={props.navigation}
-          />
-        );
+        return futureList;
       case 4:
-        console.log('fourth tab');
-        var completedList = communityList.filter(item => {
+        let completedList = communityList.filter(item => {
           return item.category == 'Completed';
         });
-        return (
-          <ListCommunities
-            communityList={completedList}
-            navigation={props.navigation}
-          />
-        );
+        return completedList;
     }
   };
-
-  // const switchFunc = () => {
-  //   let data;
-  //   switch (index) {
-  //     case 1: {
-  //       data = communityList;
-  //       console.log('All');
-  //       return data;
-  //     }
-  //     case 2: {
-  //       data = communityList.filter(item => {
-  //         return item.category == 'Current';
-  //       });
-  //       console.log('Current');
-  //       return data;
-  //     }
-  //     case 3: {
-  //       data = communityList.filter(item => {
-  //         return item.category == 'Future';
-  //       });
-  //       console.log('Future');
-  //       return data;
-  //     }
-  //     case 4: {
-  //       data = communityList.filter(item => {
-  //         return item.category == 'Completed';
-  //       });
-  //       console.log('Completed');
-  //       return data;
-  //     }
-  //   }
-  //   return (
-  //     <ListCommunities communityList={data} navigation={props.navigation} />
-  //   );
-  // };
 
   useEffect(() => {
     getCommunityList();
@@ -180,7 +114,13 @@ const CommunitiesMain = props => {
           keyExtractor={item => item.id}
         />
       </View>
-      {switchFunc()}
+      {refreshing && <ModalComponent toggleLoading={setRefreshing} />}
+      <ListCommunities
+        communityList={filterFunction()}
+        navigation={props.navigation}
+        refreshing={refreshing}
+        onRefresh={getCommunityList}
+      />
     </View>
   );
 };

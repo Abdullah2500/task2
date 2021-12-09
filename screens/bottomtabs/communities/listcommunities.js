@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
 import {calHeight, calWidth} from '../../../caldimens';
-import PostCommunity from './postcommunity';
+import PostCommunity from './postCommunity';
 
 const ListCommunities = props => {
   return (
@@ -12,6 +12,12 @@ const ListCommunities = props => {
           <PostCommunity item={item} navigation={props.navigation} />
         )}
         keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={props.refreshing}
+            onRefresh={props.onRefresh}
+          />
+        }
       />
     </View>
   );

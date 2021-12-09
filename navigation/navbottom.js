@@ -1,10 +1,10 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Communities from '../screens/bottomtabs/communities/communities';
-import Listings from '../screens/bottomtabs/listings/listings';
-import News from '../screens/bottomtabs/news';
-import Notifications from '../screens/bottomtabs/notifications';
-import More from '../screens/bottomtabs/more';
+import Communities from '../screens/bottomTabs/communities/communitiesNav';
+import Listings from '../screens/bottomTabs/listings/listings';
+import News from '../screens/bottomTabs/news';
+import Notifications from '../screens/bottomTabs/notifications';
+import More from '../screens/bottomTabs/more';
 import {Image, View, Text, StyleSheet} from 'react-native';
 import {calHeight} from '../caldimens';
 

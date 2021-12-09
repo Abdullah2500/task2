@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import CommunitiesMain from './communitiesmain';
-import SinglePost from './singlepost';
+import CommunitiesMain from './communitiesMain';
+import SinglePost from './singlePost';
 
 const Stack = createStackNavigator();
 

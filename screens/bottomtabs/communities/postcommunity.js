@@ -11,6 +11,8 @@ const PostCommunity = props => {
     about,
     short_description,
     long_description,
+    site_plan,
+    floor_plan,
   } = props.item;
   return (
     <View style={styles.mainContainer}>
@@ -23,6 +25,8 @@ const PostCommunity = props => {
             about: about,
             short_description: short_description,
             long_description: long_description,
+            site_plan: site_plan,
+            floor_plan: floor_plan,
           })
         }>
         <Image

@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBottom from '../navigation/navbottom';
+import NavBottom from '../navigation/navBottom';
 
 const HomePage = props => {
   return <NavBottom />;
