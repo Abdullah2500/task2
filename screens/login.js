@@ -13,11 +13,11 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {calHeight, calWidth} from '../caldimens';
-import Header from '../components/header';
-import ModalComponent from '../components/modal';
+import {calHeight, calWidth} from '../calDimens';
+import Header from '../components/Header';
+import ModalComponent from '../components/Modal';
 import {base_url, colors, fonts} from '../enums';
-import Button from '../components/button';
+import Button from '../components/Button';
 
 const Login = props => {
   const [passVisible, setPassVisibile] = useState(true);

@@ -8,9 +8,9 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import {fonts, colors} from '../../../enums';
-import Header from '../../../components/header';
-import {calHeight, calWidth} from '../../../caldimens';
+import {fonts, colors, imgBase_url} from '../../../enums';
+import Header from '../../../components/Header';
+import {calHeight, calWidth} from '../../../calDimens';
 
 const SinglePost = props => {
   const {
@@ -41,7 +41,7 @@ const SinglePost = props => {
       name: 'Floorplans',
     },
   ];
-
+  // renderItem for SinglePost Tabs
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -76,7 +76,6 @@ const SinglePost = props => {
     return (
       <View>
         <Text style={styles.sectionHeader}>Floorplans</Text>
-        <Text style={styles.paraText}>{floor_plan}</Text>
       </View>
     );
   };

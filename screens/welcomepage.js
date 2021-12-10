@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import {calHeight, calWidth} from '../caldimens';
-import Button from '../components/button';
+import {calHeight, calWidth} from '../calDimens';
+import Button from '../components/Button';
 import {colors, fonts} from '../enums';
 
 const WelcomePage = props => {

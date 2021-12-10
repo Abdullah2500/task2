@@ -10,9 +10,9 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {base_url} from '../../../enums';
-import Header from '../../../components/header';
-import ModalComponent from '../../../components/modal';
-import ListCommunities from './listCommunities';
+import Header from '../../../components/Header';
+import ModalComponent from '../../../components/Modal';
+import ListCommunities from './ListCommunities';
 import {fonts, colors} from '../../../enums';
 
 const CommunitiesMain = props => {
@@ -21,7 +21,6 @@ const CommunitiesMain = props => {
   const [index, setIndex] = useState(1);
 
   const getCommunityList = async () => {
-    console.log('getCommunityList called....');
     try {
       let token = await AsyncStorage.getItem('token');
       let config = {
@@ -31,7 +30,6 @@ const CommunitiesMain = props => {
       };
       const res = await axios.get(base_url + '/community-list', config);
       setCommunityList(res.data.data);
-      console.log('getCommunityList called again....');
       setRefreshing(false);
     } catch (error) {
       console.log(error);
@@ -79,17 +77,17 @@ const CommunitiesMain = props => {
         return communityList;
       case 2:
         let currentList = communityList.filter(item => {
-          return item.category == 'Current';
+          return item.category === 'Current';
         });
         return currentList;
       case 3:
         let futureList = communityList.filter(item => {
-          return item.category == 'Future';
+          return item.category === 'Future';
         });
         return futureList;
       case 4:
         let completedList = communityList.filter(item => {
-          return item.category == 'Completed';
+          return item.category === 'Completed';
         });
         return completedList;
     }
@@ -105,6 +103,7 @@ const CommunitiesMain = props => {
       <View style={styles.upperSection}>
         <Text style={styles.upperSectionLabel}>Let's find you dream home.</Text>
       </View>
+      {/* FlatList for Tabs */}
       <View style={styles.tabContainer}>
         <FlatList
           horizontal

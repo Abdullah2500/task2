@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
-import {calHeight, calWidth} from '../../../caldimens';
-import PostCommunity from './postCommunity';
+import {calHeight, calWidth} from '../../../calDimens';
+import RenderCommunity from './RenderCommunity';
 
 const ListCommunities = props => {
   return (
@@ -9,7 +9,7 @@ const ListCommunities = props => {
       <FlatList
         data={props.communityList}
         renderItem={({item}) => (
-          <PostCommunity item={item} navigation={props.navigation} />
+          <RenderCommunity item={item} navigation={props.navigation} />
         )}
         keyExtractor={item => item.id}
         refreshControl={

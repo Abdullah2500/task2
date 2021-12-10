@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {calHeight} from '../caldimens';
+import {calHeight} from '../calDimens';
 import {fonts, colors} from '../enums';
 
 const Button = props => {

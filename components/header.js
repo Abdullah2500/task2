@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Image, Text, Pressable} from 'react-native';
-import {calHeight, calWidth} from '../caldimens';
+import {calHeight, calWidth} from '../calDimens';
 import {colors, fonts} from '../enums';
 
 const Header = props => {

@@ -5,13 +5,12 @@ const ModalComponent = props => {
     setTimeout(() => props.toggleLoading(false), 3000);
   }, []);
   return (
-    <Modal>
+    <Modal transparent>
       <View
         style={{
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#E5E5E5',
         }}>
         <ActivityIndicator size="large" />
       </View>

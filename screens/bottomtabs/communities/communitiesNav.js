@@ -1,11 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import CommunitiesMain from './communitiesMain';
-import SinglePost from './singlePost';
+import CommunitiesMain from './CommunitiesMain';
+import SinglePost from './SinglePost';
 
 const Stack = createStackNavigator();
 
-const Communities = props => {
+const CommunitiesNav = props => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -23,4 +23,4 @@ const Communities = props => {
   );
 };
 
-export default Communities;
+export default CommunitiesNav;

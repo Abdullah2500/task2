@@ -1,12 +1,12 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Communities from '../screens/bottomTabs/communities/communitiesNav';
-import Listings from '../screens/bottomTabs/listings/listings';
-import News from '../screens/bottomTabs/news';
-import Notifications from '../screens/bottomTabs/notifications';
-import More from '../screens/bottomTabs/more';
+import CommunitiesNav from '../screens/bottomTabs/communities/CommunitiesNav';
+import Listings from '../screens/bottomTabs/listings/Listings';
+import News from '../screens/bottomTabs/News';
+import Notifications from '../screens/bottomTabs/Notifications';
+import More from '../screens/bottomTabs/More';
 import {Image, View, Text, StyleSheet} from 'react-native';
-import {calHeight} from '../caldimens';
+import {calHeight} from '../calDimens';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +26,7 @@ const NavBottom = () => {
         },
       }}>
       <Tab.Screen
-        name="Communities"
+        name="CommunitiesNav"
         options={{
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -48,8 +48,8 @@ const NavBottom = () => {
             </View>
           ),
         }}
-        initialRouteName={Communities}
-        component={Communities}
+        initialRouteName={CommunitiesNav}
+        component={CommunitiesNav}
       />
       <Tab.Screen
         name="Listings"

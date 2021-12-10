@@ -9,7 +9,7 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import Header from '../../components/header';
+import Header from '../../components/Header';
 import {fonts, colors} from '../../enums';
 
 const Notifications = props => {

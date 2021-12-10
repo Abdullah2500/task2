@@ -1,7 +1,7 @@
 import React from 'react';
 // import {createStackNavigator} from '@react-navigation/stack';
 import {View, Text, StyleSheet} from 'react-native';
-import Header from '../../../components/header';
+import Header from '../../../components/Header';
 // const Stack = createStackNavigator();
 import {fonts, colors} from '../../../enums';
 

@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable, FlatList, StyleSheet} from 'react-native';
 import axios from 'axios';
-import Header from '../../components/header';
-import {calHeight, calWidth} from '../../caldimens';
+import Header from '../../components/Header';
+import {calHeight, calWidth} from '../../calDimens';
 import {fonts, colors} from '../../enums';
 
 const More = props => {

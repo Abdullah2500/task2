@@ -1,5 +1,5 @@
 import React from 'react';
-import NavScreens from './navigation/navScreens';
+import NavScreens from './navigation/NavScreens';
 
 const App = () => {
   return <NavScreens />;

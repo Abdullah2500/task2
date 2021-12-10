@@ -1,19 +1,10 @@
 import React from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {calHeight, calWidth} from '../../../caldimens';
-import {fonts, colors} from '../../../enums';
+import {calHeight, calWidth} from '../../../calDimens';
+import {fonts, colors, imgBase_url} from '../../../enums';
 
-const PostCommunity = props => {
-  const {
-    name,
-    address,
-    coverImage,
-    about,
-    short_description,
-    long_description,
-    site_plan,
-    floor_plan,
-  } = props.item;
+const RenderCommunity = props => {
+  const {name, address, coverImage, about} = props.item;
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity
@@ -22,16 +13,15 @@ const PostCommunity = props => {
           props.navigation.push('SinglePost', {
             name: name,
             address: address,
+            coverImage,
             about: about,
-            short_description: short_description,
-            long_description: long_description,
-            site_plan: site_plan,
-            floor_plan: floor_plan,
           })
         }>
         <Image
           style={styles.img}
-          source={require('../../../assets/img/community1.png')}
+          source={{
+            uri: imgBase_url + coverImage,
+          }}
         />
         <View style={styles.textBlock}>
           <Text style={styles.headText}>{name}</Text>
@@ -53,12 +43,13 @@ const styles = StyleSheet.create({
   },
   img: {
     width: '100%',
+    height: calHeight(25),
     resizeMode: 'cover',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
   textBlock: {
-    marginTop: '4%',
+    marginTop: '7%',
     paddingHorizontal: '8%',
   },
   headText: {
@@ -74,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostCommunity;
+export default RenderCommunity;
