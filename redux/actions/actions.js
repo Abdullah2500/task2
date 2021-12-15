@@ -1,9 +1,8 @@
-export const incNumber = () => {
-  return {
-    type: 'INCREMENT',
-  };
-};
+import * as types from '../types';
 
-export const decNumber = () => {
-  return {type: 'DECREMENT'};
+export const setCommunityDetails = data => {
+  return {
+    type: types.SET_COMMUNITY_DETAILS,
+    payload: data,
+  };
 };

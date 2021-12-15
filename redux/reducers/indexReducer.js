@@ -1,7 +1,7 @@
-import changeNumber from './upDown';
 import {combineReducers} from 'redux';
+import communityReducer from './communityReducer';
 
 const rootReducer = combineReducers({
-  changeNumber,
+  communityReducer,
 });
 export default rootReducer;

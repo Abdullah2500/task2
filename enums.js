@@ -1,4 +1,3 @@
-export const base_url = 'http://stateview.morid.ca/api';
 export const imgBase_url = 'http://stateview.morid.ca/Images/Community/';
 export const colors = {
   background: '#F7F5ED',

@@ -1,35 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import {base_url} from '../../../enums';
+import {View, Text, FlatList, Pressable, StyleSheet} from 'react-native';
 import Header from '../../../components/Header';
 import ModalComponent from '../../../components/Modal';
 import ListCommunities from './ListCommunities';
 import {fonts, colors} from '../../../enums';
+import {getCommunitiesApi} from '../../../services/apiList';
+import {setCommunityDetails} from '../../../redux/actions/actions';
+import {useSelector, useDispatch} from 'react-redux';
 
 const CommunitiesMain = props => {
   const [communityList, setCommunityList] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
   const [index, setIndex] = useState(1);
 
+  const dispatch = useDispatch();
+
   const getCommunityList = async () => {
     try {
-      let token = await AsyncStorage.getItem('token');
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      };
-      const res = await axios.get(base_url + '/community-list', config);
-      setCommunityList(res.data.data);
+      const res = await getCommunitiesApi();
+      // console.log('res comMain: ', res);
+      const list = useSelector(state => state.communityReducer.list);
+      console.log('list: ', list);
+      dispatch(setCommunityDetails(res.data));
+      setCommunityList(res.data);
       setRefreshing(false);
     } catch (error) {
       console.log(error);
@@ -43,11 +36,11 @@ const CommunitiesMain = props => {
     },
     {
       id: 2,
-      name: ' Current ',
+      name: 'Current',
     },
     {
       id: 3,
-      name: ' Future ',
+      name: 'Future',
     },
     {
       id: 4,
@@ -57,17 +50,12 @@ const CommunitiesMain = props => {
   // renderItem for tabs
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        style={{
-          paddingHorizontal: 10,
-        }}
-        onPress={() => setIndex(item.id)}>
+      <Pressable onPress={() => setIndex(item.id)}>
         <Text
           style={item.id == index ? styles.selectedTab : styles.unselectedTab}>
           {item.name}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
@@ -150,11 +138,13 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomColor: colors.primaryColor,
     borderBottomWidth: 2,
+    marginHorizontal: 10,
   },
   unselectedTab: {
     color: 'black',
     fontFamily: fonts.regular,
     fontSize: 15,
+    marginHorizontal: 10,
   },
 });
 

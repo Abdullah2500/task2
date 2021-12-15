@@ -11,13 +11,13 @@ import {
   Keyboard,
   StyleSheet,
 } from 'react-native';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {calHeight, calWidth} from '../calDimens';
 import Header from '../components/Header';
 import ModalComponent from '../components/Modal';
-import {base_url, colors, fonts} from '../enums';
+import {colors, fonts} from '../enums';
 import Button from '../components/Button';
+import {loginApi} from '../services/apiList';
 
 const Login = props => {
   const [passVisible, setPassVisibile] = useState(true);
@@ -43,28 +43,23 @@ const Login = props => {
     }
   };
 
-  // AsyncStorage setToken
-  const storeToken = async value => {
-    try {
-      await AsyncStorage.setItem('token', value);
-    } catch (e) {
-      console.log('Error: ', e);
-    }
-  };
-
   const loginBtnPressed = async () => {
     try {
       if (validate_field()) {
         setIsLoading(true);
-        const res = await axios.post(base_url + '/login', {
+        const res = await loginApi({
           email: email,
           password: password,
         });
-        if (res.data.code === 200) {
-          storeToken(res.data.data.token);
+        if (res.code === 200) {
+          try {
+            await AsyncStorage.setItem('token', res.data.token);
+          } catch (e) {
+            console.log('Error: ', e);
+          }
           props.navigation.push('HomePage');
-        } else if (res.data.code === 202) {
-          alert(res.data.message);
+        } else if (res.code === 202) {
+          alert(res.message);
         } else {
           alert('Some Network error');
         }
