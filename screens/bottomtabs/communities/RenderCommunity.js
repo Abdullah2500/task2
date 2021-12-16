@@ -13,7 +13,6 @@ const RenderCommunity = props => {
           props.navigation.push('SinglePost', {
             name: name,
             address: address,
-            coverImage,
             about: about,
           })
         }>

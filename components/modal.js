@@ -1,9 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Modal, ActivityIndicator} from 'react-native';
-const ModalComponent = props => {
-  useEffect(() => {
-    setTimeout(() => props.toggleLoading(false), 3000);
-  }, []);
+
+const ModalComponent = () => {
   return (
     <Modal transparent>
       <View

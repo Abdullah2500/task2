@@ -4,26 +4,28 @@ import Header from '../../../components/Header';
 import ModalComponent from '../../../components/Modal';
 import ListCommunities from './ListCommunities';
 import {fonts, colors} from '../../../enums';
-import {getCommunitiesApi} from '../../../services/apiList';
-import {setCommunityDetails} from '../../../redux/actions/actions';
+import {getCommunitiesApi} from '../../../services/services';
+import {
+  closeLoading,
+  setCommunityDetails,
+} from '../../../redux/actions/actions';
 import {useSelector, useDispatch} from 'react-redux';
+import {calHeight, calWidth} from '../../../calDimens';
 
 const CommunitiesMain = props => {
-  const [communityList, setCommunityList] = useState([]);
-  const [refreshing, setRefreshing] = useState(true);
   const [index, setIndex] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
+  const visible = useSelector(state => state.loadingReducer);
+  const communityList = useSelector(state => state.communityReducer.list);
+  const username = useSelector(state => state.userReducer.details.username);
 
   const getCommunityList = async () => {
     try {
       const res = await getCommunitiesApi();
-      // console.log('res comMain: ', res);
-      const list = useSelector(state => state.communityReducer.list);
-      console.log('list: ', list);
       dispatch(setCommunityDetails(res.data));
-      setCommunityList(res.data);
-      setRefreshing(false);
+      dispatch(closeLoading());
     } catch (error) {
       console.log(error);
     }
@@ -32,7 +34,7 @@ const CommunitiesMain = props => {
   const tabs = [
     {
       id: 1,
-      name: '  All  ',
+      name: ' All ',
     },
     {
       id: 2,
@@ -50,7 +52,9 @@ const CommunitiesMain = props => {
   // renderItem for tabs
   const renderItem = ({item}) => {
     return (
-      <Pressable onPress={() => setIndex(item.id)}>
+      <Pressable
+        style={{paddingHorizontal: 10}}
+        onPress={() => setIndex(item.id)}>
         <Text
           style={item.id == index ? styles.selectedTab : styles.unselectedTab}>
           {item.name}
@@ -81,18 +85,24 @@ const CommunitiesMain = props => {
     }
   };
 
+  const refreshed = async () => {
+    setRefreshing(true);
+    await getCommunityList();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     getCommunityList();
   }, []);
 
   return (
     <View style={styles.mainContainer}>
-      <Header title="Hi, Charles!" navigation={props.navigation} />
+      <Header title={`Hi, ${username}!`} navigation={props.navigation} />
       <View style={styles.upperSection}>
         <Text style={styles.upperSectionLabel}>Let's find you dream home.</Text>
       </View>
-      {/* FlatList for Tabs */}
       <View style={styles.tabContainer}>
+        {/* FlatList for Tabs */}
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -101,12 +111,12 @@ const CommunitiesMain = props => {
           keyExtractor={item => item.id}
         />
       </View>
-      {refreshing && <ModalComponent toggleLoading={setRefreshing} />}
+      {visible && <ModalComponent />}
       <ListCommunities
         communityList={filterFunction()}
         navigation={props.navigation}
         refreshing={refreshing}
-        onRefresh={getCommunityList}
+        onRefresh={refreshed}
       />
     </View>
   );
@@ -118,18 +128,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   upperSection: {
-    width: '85%',
-    alignSelf: 'center',
+    alignItems: 'flex-start',
+    paddingHorizontal: calWidth(7),
   },
   upperSectionLabel: {
     color: colors.labelFontColor,
     fontSize: 18,
     fontFamily: fonts.regular,
+    marginBottom: 8,
   },
   tabContainer: {
-    width: '90%',
-    alignSelf: 'center',
-    marginTop: '5%',
+    marginHorizontal: calWidth(5),
+    zIndex: 1,
   },
   selectedTab: {
     color: colors.primaryColor,
@@ -137,14 +147,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingBottom: 5,
     borderBottomColor: colors.primaryColor,
-    borderBottomWidth: 2,
-    marginHorizontal: 10,
+    borderBottomWidth: 3,
   },
   unselectedTab: {
     color: 'black',
     fontFamily: fonts.regular,
     fontSize: 15,
-    marginHorizontal: 10,
   },
 });
 

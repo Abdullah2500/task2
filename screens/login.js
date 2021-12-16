@@ -17,13 +17,17 @@ import Header from '../components/Header';
 import ModalComponent from '../components/Modal';
 import {colors, fonts} from '../enums';
 import Button from '../components/Button';
-import {loginApi} from '../services/apiList';
+import {loginApi} from '../services/services';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUserDetails, startLoading} from '../redux/actions/actions';
 
 const Login = props => {
   const [passVisible, setPassVisibile] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const visible = useSelector(state => state.loadingReducer);
 
   const validate_field = () => {
     if (!email || !password) {
@@ -46,11 +50,12 @@ const Login = props => {
   const loginBtnPressed = async () => {
     try {
       if (validate_field()) {
-        setIsLoading(true);
+        dispatch(startLoading());
         const res = await loginApi({
           email: email,
           password: password,
         });
+        dispatch(setUserDetails(res.data));
         if (res.code === 200) {
           try {
             await AsyncStorage.setItem('token', res.data.token);
@@ -66,8 +71,6 @@ const Login = props => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -146,7 +149,7 @@ const Login = props => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-      {isLoading && <ModalComponent toggleLoading={setIsLoading} />}
+      {visible && <ModalComponent />}
     </KeyboardAvoidingView>
   );
 };
