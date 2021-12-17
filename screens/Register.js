@@ -10,34 +10,36 @@ import {
   Keyboard,
   StyleSheet,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {calHeight, calWidth} from '../calDimens';
-import {colors, fonts} from '../enums';
 import Header from '../components/Header';
 import ModalComponent from '../components/Modal';
+import {colors, fonts} from '../enums';
 import Button from '../components/Button';
 import InputComponent from '../components/formComponents/Input';
-import {loginApi} from '../services/services';
+import InputPassComponent from '../components/formComponents/InputPass';
+import {registerApi} from '../services/services';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   closeLoading,
   setUserDetails,
   startLoading,
 } from '../redux/actions/actions';
-import InputPassComponent from '../components/formComponents/InputPass';
 
-const Login = props => {
+const Register = props => {
   const [passVisible, setPassVisibile] = useState(true);
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
   const dispatch = useDispatch();
   const visible = useSelector(state => state.loadingReducer);
 
   const validate_field = () => {
-    if (!email || !password) {
-      alert('Email and Password fields should not be empty');
+    if (!username || !email || !password || !address || !phone) {
+      alert('Fields should not be empty');
       return false;
     } else if (password.length < 6) {
       alert('Password should be at least 6 characters long');
@@ -53,22 +55,21 @@ const Login = props => {
     }
   };
 
-  const loginBtnPressed = async () => {
+  const registerBtnPressed = async () => {
     try {
       if (validate_field()) {
         dispatch(startLoading());
-        const res = await loginApi({
+        const res = await registerApi({
+          username: username,
           email: email,
           password: password,
+          address: address,
+          phone_number: phone,
         });
         dispatch(setUserDetails(res.data));
         if (res.code === 200) {
-          try {
-            await AsyncStorage.setItem('token', res.data.token);
-          } catch (e) {
-            console.log('Error: ', e);
-          }
-          props.navigation.push('HomePage');
+          alert('User successfully registerd.');
+          props.navigation.push('Login');
         } else {
           alert(res.message);
           dispatch(closeLoading());
@@ -95,14 +96,21 @@ const Login = props => {
       keyboardShouldPersistTaps="handled">
       <Header navigation={props.navigation} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
+        <View style={{flex: 1}}>
           <View style={styles.upperSection}>
-            <Text style={styles.mainHead}>Welcome Back!</Text>
+            <Text style={styles.mainHead}>Welcome Aboard!</Text>
             <Text style={styles.headLabel}>
-              Login to your account by entering your email and password.
+              Create an account so you can access all the features of the app.
+              in just 2 steps
             </Text>
           </View>
           <View style={styles.bottomSection}>
+            <InputComponent
+              textLabel="Full Name"
+              imgSource={require('../assets/img/username.png')}
+              onChangeText={text => setUsername(text)}
+              placeholder="Enter your full name"
+            />
             <InputComponent
               textLabel="E-Mail"
               imgSource={require('../assets/img/mail.png')}
@@ -118,25 +126,31 @@ const Login = props => {
               onPress={() => setPassVisibile(!passVisible)}
               passVisible={passVisible}
             />
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => alert('Improve your memory!')}
-              style={styles.forgotPass}>
-              <Text style={styles.forgotPassText}>Forgot Password?</Text>
-            </TouchableOpacity>
+            <InputComponent
+              textLabel="Current Address"
+              imgSource={require('../assets/img/address.png')}
+              onChangeText={text => setAddress(text)}
+              placeholder="Enter your current full address"
+            />
+            <InputComponent
+              textLabel="Phone Number"
+              imgSource={require('../assets/img/phone_number.png')}
+              onChangeText={text => setPhone(text)}
+              placeholder="Enter your phone number"
+            />
             <Button
               activeOpacity={0.9}
-              btnPressed={loginBtnPressed}
-              title="Login"
+              btnPressed={registerBtnPressed}
+              title="Register"
             />
             <View style={styles.endTextStyle}>
               <Text style={styles.endTextFontStyle}>
-                Don't have an account?
+                Already have an account?
               </Text>
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => props.navigation.push('Register')}>
-                <Text style={styles.signUpBtn}>Sign Up</Text>
+                onPress={() => props.navigation.push('Login')}>
+                <Text style={styles.loginBtn}>Login</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -157,7 +171,6 @@ const styles = StyleSheet.create({
     paddingTop: calHeight(4),
     paddingHorizontal: calWidth(7),
     alignSelf: 'center',
-    height: calHeight(25),
   },
   mainHead: {
     fontFamily: fonts.bold,
@@ -174,22 +187,36 @@ const styles = StyleSheet.create({
   bottomSection: {
     backgroundColor: colors.white,
     alignItems: 'center',
-    postion: 'absolute',
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
-    paddingTop: calHeight(6),
+    marginTop: calHeight(3),
+    paddingVertical: calHeight(4),
     paddingHorizontal: calWidth(7),
-    bottom: 0,
-    height: calHeight(65),
   },
-  forgotPass: {
-    alignSelf: 'flex-end',
-    marginTop: calHeight(2),
-  },
-  forgotPassText: {
-    color: colors.mainFontColor,
+  inputLabel: {
+    color: colors.primaryColor,
     fontFamily: fonts.regular,
     fontSize: 16,
+    alignSelf: 'flex-start',
+  },
+  inputContainer: {
+    width: '100%',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.borderColor,
+    margin: '5%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputInnerContainer: {
+    width: calWidth(64),
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    color: colors.placeholderColor,
+  },
+  inputIcon: {
+    marginHorizontal: calWidth(5),
+    alignSelf: 'center',
   },
   endTextStyle: {
     flexDirection: 'row',
@@ -202,11 +229,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingRight: '2%',
   },
-  signUpBtn: {
+  loginBtn: {
     color: colors.primaryColor,
     fontFamily: fonts.regular,
     fontSize: 16,
   },
 });
 
-export default Login;
+export default Register;

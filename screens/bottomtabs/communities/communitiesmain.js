@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, Pressable, StyleSheet} from 'react-native';
+import {View, Text, FlatList, Pressable, StyleSheet, Modal} from 'react-native';
 import Header from '../../../components/Header';
 import ModalComponent from '../../../components/Modal';
 import ListCommunities from './ListCommunities';
@@ -15,11 +15,14 @@ import {calHeight, calWidth} from '../../../calDimens';
 const CommunitiesMain = props => {
   const [index, setIndex] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const dispatch = useDispatch();
   const visible = useSelector(state => state.loadingReducer);
   const communityList = useSelector(state => state.communityReducer.list);
-  const username = useSelector(state => state.userReducer.details.username);
+  const userListArray = useSelector(state => state.userReducer.details);
+  const username = userListArray[userListArray.length - 1].username;
+  // const username = useSelector(state => state.userReducer.details.username);
 
   const getCommunityList = async () => {
     try {
@@ -62,6 +65,76 @@ const CommunitiesMain = props => {
       </Pressable>
     );
   };
+  const modalFunc = () => {
+    return (
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(!modalVisible)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: 22,
+              color: colors.mainFontColor,
+              borderBottomColor: '#000',
+              borderBottomWidth: 3,
+              marginTop: 5,
+            }}>
+            Heading
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              padding: 20,
+              borderRadius: 20,
+            }}>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={userListArray}
+              renderItem={({item}) => {
+                return (
+                  <View
+                    style={{
+                      margin: 10,
+                      padding: 10,
+                      backgroundColor: '#d6d6c2',
+                      borderRadius: 15,
+                    }}>
+                    <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+                      Username: {item.username}
+                    </Text>
+                    <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+                      Email: {item.email}
+                    </Text>
+                    <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+                      Address: {item.address}
+                    </Text>
+                    <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+                      Phone Number: {item.phone_number}
+                    </Text>
+                  </View>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+            <Pressable
+              onPress={() => setModalVisible(false)}
+              style={styles.showUsers}>
+              <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+                Close
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   const filterFunction = () => {
     switch (index) {
@@ -100,6 +173,14 @@ const CommunitiesMain = props => {
       <Header title={`Hi, ${username}!`} navigation={props.navigation} />
       <View style={styles.upperSection}>
         <Text style={styles.upperSectionLabel}>Let's find you dream home.</Text>
+        <Pressable
+          onPress={() => setModalVisible(true)}
+          style={styles.showUsers}>
+          <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+            Show total Users
+          </Text>
+        </Pressable>
+        {modalFunc()}
       </View>
       <View style={styles.tabContainer}>
         {/* FlatList for Tabs */}
@@ -153,6 +234,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: fonts.regular,
     fontSize: 15,
+  },
+  showUsers: {
+    alignSelf: 'center',
+    padding: 5,
+    backgroundColor: '#cc9966',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
