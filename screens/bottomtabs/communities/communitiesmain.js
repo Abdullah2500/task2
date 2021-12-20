@@ -22,7 +22,6 @@ const CommunitiesMain = props => {
   const communityList = useSelector(state => state.communityReducer.list);
   const userListArray = useSelector(state => state.userReducer.details);
   const username = userListArray[userListArray.length - 1].username;
-  // const username = useSelector(state => state.userReducer.details.username);
 
   const getCommunityList = async () => {
     try {
@@ -71,41 +70,15 @@ const CommunitiesMain = props => {
         visible={modalVisible}
         animationType="slide"
         onRequestClose={() => setModalVisible(!modalVisible)}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: 22,
-              color: colors.mainFontColor,
-              borderBottomColor: '#000',
-              borderBottomWidth: 3,
-              marginTop: 5,
-            }}>
-            Heading
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              padding: 20,
-              borderRadius: 20,
-            }}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalHeading}>Heading</Text>
+          <View style={styles.modalList}>
             <FlatList
               showsVerticalScrollIndicator={false}
               data={userListArray}
               renderItem={({item}) => {
                 return (
-                  <View
-                    style={{
-                      margin: 10,
-                      padding: 10,
-                      backgroundColor: '#d6d6c2',
-                      borderRadius: 15,
-                    }}>
+                  <View style={styles.modalListItem}>
                     <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
                       Username: {item.username}
                     </Text>
@@ -176,7 +149,11 @@ const CommunitiesMain = props => {
         <Pressable
           onPress={() => setModalVisible(true)}
           style={styles.showUsers}>
-          <Text style={[styles.upperSectionLabel, {fontSize: 16}]}>
+          <Text
+            style={[
+              styles.upperSectionLabel,
+              {fontSize: 16, color: colors.white},
+            ]}>
             Show total Users
           </Text>
         </Pressable>
@@ -238,10 +215,34 @@ const styles = StyleSheet.create({
   showUsers: {
     alignSelf: 'center',
     padding: 5,
-    backgroundColor: '#cc9966',
+    backgroundColor: colors.primaryColor,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalHeading: {
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    color: colors.mainFontColor,
+    borderBottomColor: '#000',
+    borderBottomWidth: 3,
+    marginTop: 5,
+  },
+  modalList: {
+    flex: 1,
+    padding: 20,
+    borderRadius: 20,
+  },
+  modalListItem: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#d6d6c2',
+    borderRadius: 15,
   },
 });
 
